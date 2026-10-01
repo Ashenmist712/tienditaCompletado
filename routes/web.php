@@ -40,7 +40,6 @@ Route::get('/checkout', [CartController::class, 'checkout'])->name('cart.checkou
 */
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-    
     Route::resource('categorias', CategoryController::class);
     Route::resource('productos', ProductController::class);
     Route::resource('pedidos', OrderController::class);

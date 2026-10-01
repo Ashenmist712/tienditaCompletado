@@ -7,8 +7,8 @@
 <section class="hero">
     <div class="hero-bg"></div>
     <div>
-        <h1>Materiales y Servicios Industriales</h1>
-        <p>Equipos de seguridad, herramientas mecánicas y eléctricas con la mejor calidad y servicio. Descubre nuestro catálogo completo.</p>
+        <h1>Materiales contra incendios</h1>
+        <p>Equipos de seguridad, herramientas mecánicas e incendiarias con la mejor calidad y servicio. Descubre nuestro catálogo completo.</p>
         <a href="#productos" class="btn-primary" style="animation: fadeUp 1.4s ease-out;">Explorar Productos</a>
     </div>
 </section>
