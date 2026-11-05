@@ -13,11 +13,6 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\UserController;
 
-/*
-|--------------------------------------------------------------------------
-| Public Routes
-|--------------------------------------------------------------------------
-*/
 Route::get('/', [ShopController::class, 'index'])->name('shop.index');
 Route::get('/producto/{id}', [ShopController::class, 'show'])->name('shop.show');
 Route::get('/categoria/{id}', [ShopController::class, 'category'])->name('shop.category');
@@ -40,8 +35,10 @@ Route::get('/checkout', [CartController::class, 'checkout'])->name('cart.checkou
 */
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-    Route::resource('categorias', CategoryController::class);
-    Route::resource('productos', ProductController::class);
-    Route::resource('pedidos', OrderController::class);
-    Route::resource('usuarios', UserController::class);
+    Route::resource('categorias', CategoryController::class)->names('categories');
+    Route::resource('productos', ProductController::class)->names('products');
+
+    Route::resource('pedidos', OrderController::class)->names('orders');
+
+    Route::resource('usuarios', UserController::class)->names('users');
 });

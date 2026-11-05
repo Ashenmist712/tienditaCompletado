@@ -23,15 +23,18 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
+            'is_admin' => 'nullable|boolean', // Para definir si entra al Admin o a la Tienda
         ]);
 
         $validated['password'] = Hash::make($validated['password']);
+        $validated['is_admin'] = $request->has('is_admin');
+
         User::create($validated);
 
-        return redirect()->route('admin.usuarios.index')->with('success', 'Usuario creado exitosamente');
+        return redirect()->route('admin.users.index')->with('success', 'Usuario creado exitosamente');
     }
 
     public function edit(User $usuario)
@@ -42,8 +45,9 @@ class UserController extends Controller
     public function update(Request $request, User $usuario)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $usuario->id,
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|string|email|max:255|unique:users,email,' . $usuario->id,
+            'is_admin' => 'nullable|boolean',
         ]);
 
         if ($request->filled('password')) {
@@ -51,13 +55,16 @@ class UserController extends Controller
             $validated['password'] = Hash::make($request->password);
         }
 
+        $validated['is_admin'] = $request->has('is_admin');
+
         $usuario->update($validated);
-        return redirect()->route('admin.usuarios.index')->with('success', 'Usuario actualizado exitosamente');
+
+        return redirect()->route('admin.users.index')->with('success', 'Usuario actualizado exitosamente');
     }
 
     public function destroy(User $usuario)
     {
-        User::destroy($usuario->id);
-        return redirect()->route('admin.usuarios.index')->with('success', 'Usuario eliminado');
+        $usuario->delete();
+        return redirect()->route('admin.users.index')->with('success', 'Usuario eliminado');
     }
 }
