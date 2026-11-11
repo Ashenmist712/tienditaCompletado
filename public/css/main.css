@@ -536,7 +536,7 @@ footer p {
 
 .add-to-cart-btn-large:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 20px rgba(46, 160, 67, 0.4);
+    box-shadow: 0 5px 20px rgba(14, 165, 233, 0.35);
 }
 
 .add-to-cart-btn-large:disabled {

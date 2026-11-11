@@ -12,6 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
     
     <link href="{{ asset('css/main.css') }}" rel="stylesheet">
+    @stack('styles')
 </head>
 <!-- Enviamos la variable de sesión al JS usando un data-attribute -->
 <body data-open-cart="{{ session('open_cart') ? 'true' : 'false' }}">
@@ -66,5 +67,14 @@
     </footer>
 
     <script src="{{ asset('js/main.js') }}"></script>
+    @if(session('open_cart'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof openCartSidebar === 'function') {
+                openCartSidebar();
+            }
+        });
+    </script>
+    @endif
 </body>
 </html>
