@@ -28,7 +28,8 @@ class CategoryController extends Controller
         ]);
 
         Category::create($validated);
-        return redirect()->route('admin.categorias.index')->with('success', 'Categoría creada exitosamente');
+        // Ajustado a admin.categories.index
+        return redirect()->route('admin.categories.index')->with('success', 'Categoría creada exitosamente');
     }
 
     public function edit(Category $categoria)
@@ -45,12 +46,14 @@ class CategoryController extends Controller
         ]);
 
         $categoria->update($validated);
-        return redirect()->route('admin.categorias.index')->with('success', 'Categoría actualizada exitosamente');
+        // Ajustado a admin.categories.index
+        return redirect()->route('admin.categories.index')->with('success', 'Categoría actualizada exitosamente');
     }
 
     public function destroy(Category $categoria)
     {
         Category::destroy($categoria->id);
-        return redirect()->route('admin.categorias.index')->with('success', 'Categoría eliminada');
+        // Ajustado a admin.categories.index
+        return redirect()->route('admin.categories.index')->with('success', 'Categoría eliminada');
     }
 }
