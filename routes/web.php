@@ -1,37 +1,20 @@
 <?php
 
-<<<<<<< HEAD
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\SearchController;
-
 use App\Http\Controllers\Auth\LoginController;
-
 use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\ProductController;
-=======
->>>>>>> origin/pasarelaPagos/paypal
 use App\Http\Controllers\Admin\CategoryController;
-use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\UserController;
-<<<<<<< HEAD
 use App\Http\Controllers\Auth\RegisterController;
-use Illuminate\Foundation\Auth\EmailVerificationRequest; // Para validar el correo
-use Illuminate\Http\Request;
-
-=======
-use App\Http\Controllers\CartController;
-// Admin Controllers
-use App\Http\Controllers\PageController;
 use App\Http\Controllers\PaymentController;
-use App\Http\Controllers\SearchController;
-use App\Http\Controllers\ShopController;
-use Illuminate\Support\Facades\Route;
->>>>>>> origin/pasarelaPagos/paypal
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Http\Request;
 
 Route::get('/', [ShopController::class, 'index'])->name('shop.index');
 Route::get('/producto/{id}', [ShopController::class, 'show'])->name('shop.show');
@@ -44,9 +27,10 @@ Route::get('/buscar', [SearchController::class, 'index'])->name('search.index');
 Route::get('/carrito', [CartController::class, 'index'])->name('cart.index');
 Route::post('/carrito/agregar', [CartController::class, 'add'])->name('cart.add');
 Route::post('/carrito/eliminar', [CartController::class, 'remove'])->name('cart.remove');
-<<<<<<< HEAD
-=======
-Route::get('/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
+
+Route::get('/checkout', [CartController::class, 'checkout'])
+    ->middleware('auth')
+    ->name('cart.checkout');
 Route::post('/checkout/{provider}', [PaymentController::class, 'start'])
     ->where('provider', 'paypal')
     ->name('payments.start');
@@ -55,9 +39,6 @@ Route::post('/checkout/paypal/capture/{order}', [PaymentController::class, 'capt
     ->name('payments.paypal.capture');
 Route::get('/pago/confirmacion/{order}', [PaymentController::class, 'success'])
     ->name('payments.success');
->>>>>>> origin/pasarelaPagos/paypal
-
-Route::get('/checkout', [CartController::class, 'checkout'])->name('cart.checkout')->middleware('auth');
 
 // Rutas de Autenticación
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -66,27 +47,15 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-<<<<<<< HEAD
-    Route::resource('categorias', CategoryController::class)->names('categories');
+
+    Route::resource('categorias', CategoryController::class)
+        ->except(['create', 'edit'])
+        ->names('categories');
     Route::resource('productos', ProductController::class)->names('products');
     Route::resource('pedidos', OrderController::class)->names('orders');
     Route::resource('usuarios', UserController::class)->names('users');
-=======
 
-    Route::resource('categorias', CategoryController::class);
-    Route::resource('productos', ProductController::class);
-    Route::resource('pedidos', OrderController::class);
-    Route::resource('usuarios', UserController::class);
->>>>>>> origin/pasarelaPagos/paypal
 });
-// Rutas de Autenticación
-Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [LoginController::class, 'login']);
-Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
-
-
-
-
 
 // --- RUTAS DE REGISTRO ---
 Route::get('/registro', [RegisterController::class, 'showRegistrationForm'])->name('register');
@@ -101,7 +70,11 @@ Route::get('/email/verify', function () {
 // 2. La ruta a la que el usuario es dirigido cuando hace clic en el enlace del correo
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
     $request->fulfill(); // Marca el correo como verificado
-    return redirect('/')->with('success', '¡Correo verificado exitosamente!');
+    $destination = $request->user()->is_admin
+        ? route('admin.dashboard')
+        : route('shop.index');
+
+    return redirect($destination)->with('success', '¡Correo verificado exitosamente!');
 })->middleware(['auth', 'signed'])->name('verification.verify');
 
 // 3. Ruta para reenviar el correo si no les llegó

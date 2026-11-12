@@ -10,13 +10,8 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        $categories = Category::query()->paginate(10);
+        $categories = Category::query()->withCount('products')->get();
         return view('admin.categories.index', compact('categories'));
-    }
-
-    public function create()
-    {
-        return view('admin.categories.create');
     }
 
     public function store(Request $request)
@@ -30,11 +25,6 @@ class CategoryController extends Controller
         Category::create($validated);
         // Ajustado a admin.categories.index
         return redirect()->route('admin.categories.index')->with('success', 'Categoría creada exitosamente');
-    }
-
-    public function edit(Category $categoria)
-    {
-        return view('admin.categories.edit', compact('categoria'));
     }
 
     public function update(Request $request, Category $categoria)

@@ -11,14 +11,15 @@ class ProductController extends Controller
 {
     public function index()
     {
-        $products = Product::query()->with('category')->paginate(10);
-        return view('admin.products.index', compact('products'));
+        $products = Product::query()->with('category')->get();
+        $categories = Category::query()->orderBy('nombre')->get();
+
+        return view('admin.products.index', compact('products', 'categories'));
     }
 
     public function create()
     {
-        $categories = Category::all();
-        return view('admin.products.create', compact('categories'));
+        return redirect()->route('admin.products.index');
     }
 
     public function store(Request $request)
@@ -46,8 +47,7 @@ class ProductController extends Controller
 
     public function edit(Product $producto)
     {
-        $categories = Category::all();
-        return view('admin.products.edit', compact('producto', 'categories'));
+        return redirect()->route('admin.products.index');
     }
 
     public function update(Request $request, Product $producto)

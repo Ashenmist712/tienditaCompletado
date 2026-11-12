@@ -25,9 +25,26 @@ class LoginController extends Controller
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
 
+            $intendedUrl = $request->session()->get('url.intended');
+            $verificationPath = route('verification.verify', [
+                'id' => Auth::id(),
+                'hash' => sha1(Auth::user()->getEmailForVerification()),
+            ], false);
+            $intendedHost = is_string($intendedUrl)
+                ? parse_url($intendedUrl, PHP_URL_HOST)
+                : null;
+
+            if (is_string($intendedUrl)
+                && $intendedHost === $request->getHost()
+                && parse_url($intendedUrl, PHP_URL_PATH) === $verificationPath) {
+                return redirect()->intended(
+                    Auth::user()->is_admin ? route('admin.dashboard') : route('shop.index')
+                );
+            }
+
             // Redirigir según el rol
             if (Auth::user()->is_admin) {
-                return redirect()->intended(route('admin.dashboard')); 
+                return redirect()->route('admin.dashboard');
             }
 
             return redirect()->intended(route('shop.index')); 

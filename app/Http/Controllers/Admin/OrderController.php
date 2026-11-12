@@ -10,8 +10,21 @@ class OrderController extends Controller
 {
     public function index()
     {
-        $orders = Order::query()->with('user')->paginate(10);
-        return view('admin.orders.index', compact('orders'));
+        $orders = Order::query()
+            ->with(['user', 'details.product'])
+            ->latest()
+            ->get();
+        $summary = [
+            'total' => $orders->count(),
+            'pending' => $orders->where('estado', 'pendiente')->count(),
+            'processing' => $orders->where('estado', 'procesando')->count(),
+            'paid' => $orders->where('payment_status', Order::PAYMENT_PAID)->count(),
+            'paid_total' => $orders
+                ->where('payment_status', Order::PAYMENT_PAID)
+                ->sum('total'),
+        ];
+
+        return view('admin.orders.index', compact('orders', 'summary'));
     }
 
     public function show(Order $pedido)

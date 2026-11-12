@@ -1,4 +1,22 @@
 document.addEventListener('DOMContentLoaded', function() {
+    const passwordInput = document.getElementById('password');
+    const passwordToggle = document.getElementById('togglePassword');
+
+    if (passwordInput && passwordToggle) {
+        passwordToggle.addEventListener('click', function() {
+            const shouldShowPassword = passwordInput.type === 'password';
+
+            passwordInput.type = shouldShowPassword ? 'text' : 'password';
+            passwordToggle.setAttribute('aria-pressed', String(shouldShowPassword));
+            passwordToggle.setAttribute(
+                'aria-label',
+                shouldShowPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'
+            );
+            passwordToggle.querySelector('.password-toggle-show').hidden = shouldShowPassword;
+            passwordToggle.querySelector('.password-toggle-hide').hidden = !shouldShowPassword;
+        });
+    }
+
     // Interceptar clics en botones de agregar al carrito para evitar navegación si están dentro de un link (<a>)
     const addToCartBtns = document.querySelectorAll('.add-to-cart-btn, .btn-icon');
     
