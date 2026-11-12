@@ -8,41 +8,49 @@
 
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
     
+    <a href="{{ route('admin.categories.index') }}" class="block no-underline">
     <div class="bg-white p-6 rounded-lg shadow border-l-4 border-blue-500 flex items-center justify-between">
         <div>
             <h3 class="text-gray-500 text-sm font-bold uppercase">Categorías</h3>
-            <p class="text-3xl font-bold text-gray-800">0</p>
+            <p class="text-3xl font-bold text-gray-800">{{ $totalCategories }}</p>
         </div>
         <div class="text-blue-500 opacity-70">
             <i class="fas fa-folder-open text-4xl"></i>
         </div>
     </div>
+    </a>
 
+    <a href="{{ route('admin.products.index') }}" class="block no-underline">
     <div class="bg-white p-6 rounded-lg shadow border-l-4 border-green-500 flex items-center justify-between">
         <div>
             <h3 class="text-gray-500 text-sm font-bold uppercase">Productos</h3>
-            <p class="text-3xl font-bold text-gray-800">0</p>
+            <p class="text-3xl font-bold text-gray-800">{{ $totalProducts }}</p>
         </div>
         <div class="text-green-500 opacity-70">
             <i class="fas fa-box text-4xl"></i>
         </div>
     </div>
+    </a>
 
+    <a href="{{ route('admin.orders.index') }}" class="block no-underline">
     <div class="bg-white p-6 rounded-lg shadow border-l-4 border-yellow-500 flex items-center justify-between">
         <div>
             <h3 class="text-gray-500 text-sm font-bold uppercase">Pedidos</h3>
-            <p class="text-3xl font-bold text-gray-800">0</p>
+            <p class="text-3xl font-bold text-gray-800">{{ $totalOrders }}</p>
         </div>
         <div class="text-yellow-500 opacity-70">
             <i class="fas fa-shopping-cart text-4xl"></i>
         </div>
     </div>
+    </a>
 
+    <a href="{{ route('admin.users.index') }}" class="block no-underline">
     <div class="bg-white p-6 rounded-lg shadow border-l-4 border-purple-500 flex items-center justify-between">
         <div>
             <h3 class="text-gray-500 text-sm font-bold uppercase">Usuarios</h3>
-            <p class="text-3xl font-bold text-gray-800">1</p>
+            <p class="text-3xl font-bold text-gray-800">{{ $totalUsers }}</p>
         </div>
+        </a>
         <div class="text-purple-500 opacity-70">
             <i class="fas fa-users text-4xl"></i>
         </div>
@@ -74,7 +82,7 @@
     <div class="row">
         <div class="col-12 col-lg-8">
             <div class="card shadow-sm mb-4">
-                <div class="card-header bg-white fw-bold">Flujo de Ingresos ($)</div>
+                <div class="card-header bg-white fw-bold">Ingresos pagados por periodo ($)</div>
                 <div class="card-body p-3">
                     <div style="position: relative; height: 320px;">
                         <canvas id="chartDinero" aria-label="Gráfico de flujo de ingresos" role="img"></canvas>
@@ -85,11 +93,18 @@
 
         <div class="col-12 col-lg-4">
             <div class="card shadow-sm mb-4">
-                <div class="card-header bg-white fw-bold">Resumen de Pedidos / Productos</div>
+                <div class="card-header bg-white fw-bold">Unidades vendidas por producto (pagadas)</div>
                 <div class="card-body p-3">
+                    @if(count($labelsProductos) > 0)
                     <div style="position: relative; height: 320px;">
                         <canvas id="chartVentas" aria-label="Gráfico resumen de pedidos y productos" role="img"></canvas>
                     </div>
+                    @else
+                    <div class="d-flex flex-column align-items-center justify-content-center text-center text-muted" style="height: 320px;">
+                        <i class="fas fa-chart-pie fa-2x mb-3" aria-hidden="true"></i>
+                        <p class="mb-0">Todavía no hay productos en pedidos pagados.</p>
+                    </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -135,6 +150,7 @@
         }
     });
 
+    @if(count($labelsProductos) > 0)
     new Chart(document.getElementById('chartVentas'), {
         type: 'doughnut',
         data: {
@@ -156,5 +172,6 @@
             }
         }
     });
+    @endif
 </script>
 @endsection
